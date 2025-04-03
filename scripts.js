@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     // Add event listener for the "Rand" button
     var date = new Date();
-    if (date.getDay == 4) {
+    if (date.getDay() == 4) {
         var kfc = document.getElementById("kfc");
         kfc.innerText = "今天肯德基疯狂星期㊃，V我㉌，祝你考运加倍！";
     }

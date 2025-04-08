@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "邵琳轩"
     ];
     const randomButton = document.getElementById("rand");
-    const randomRutton10 = document.getElementById("rand10");
+    const randomButton10 = document.getElementById("rand10");
     const cells = table.getElementsByTagName('td');
     function goRandom() {
         var Names = NAMES;
@@ -48,9 +48,16 @@ document.addEventListener("DOMContentLoaded", () => {
         // location.reload();
     }
     randomButton.addEventListener("click", goRandom);
-    randomRutton10.addEventListener("click", (event) => {
+    randomButton10.addEventListener("click", (event) => {
         for (let i = 0; i < 10; i++) {
-            setTimeout(() => goRandom(), i * 100);
+            setTimeout(() => {
+                goRandom();
+                if (i === 9) { // 在最后一次随机后添加黄色阴影
+                    const randomCellIndex = Math.floor(Math.random() * cells.length);
+                    Array.from(cells).forEach(cell => cell.style.backgroundColor = ''); // 清除之前的阴影
+                    cells[randomCellIndex].style.backgroundColor = 'yellow';
+                }
+            }, i * 100);
         }
     });
     // Add event listener for the "Rand" button

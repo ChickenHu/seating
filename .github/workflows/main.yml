@@ -29,11 +29,8 @@ jobs:
 
       - uses: docker://pandoc/latex:3.5
         with:
-          args: >-  # allows you to break string into multiple lines
-            --standalone
-            --output=output.pdf
-            seating.md
-            --pdf-engine=xelatex
+          entrypoint: /bin/bash
+          args: -c "apt-get update && apt-get install -y fonts-noto-cjk ttf-mscorefonts-installer && pandoc seating.md -o output.pdf --pdf-engine=xelatex"
 
       - name: Commit and push changes
         run: |

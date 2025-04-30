@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y g++ texlive-xetex texlive-fonts-recommended texlive-fonts-extra fonts-noto-cjk ttf-mscorefonts-installer
+          sudo apt-get install -y g++ texlive-xetex texlive-fonts-recommended texlive-fonts-extra fonts-noto-cjk ttf-mscorefonts-installer pandoc
 
       # 第三步：编译 seating.cpp
       - name: Compile seating.cpp

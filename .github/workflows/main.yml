@@ -1,45 +1,48 @@
-name: Auto Generate PDF from Markdown
+name: Generate PDF from Seating Markdown
 
 on:
   push:
   schedule:
-    - cron: '0 0 * * *'  # 北京时间早上8点
+    - cron: '0 0 * * *'  # 每天早上8点触发（东8区）
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      # 第一步：签出代码
+      - name: Checkout code
         uses: actions/checkout@v3
 
+      # 第二步：安装依赖（包括 g++、xelatex 和所需字体）
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y g++
+          sudo apt-get install -y g++ texlive-xetex texlive-fonts-recommended texlive-fonts-extra fonts-noto-cjk ttf-mscorefonts-installer
 
-      - name: Compile generate.cpp
+      # 第三步：编译 seating.cpp
+      - name: Compile seating.cpp
         run: g++ seating.cpp -o seating
 
-      - name: Run generate and save output
+      # 第四步：运行编译后的文件并生成 seating.md
+      - name: Run seating and generate seating.md
         run: ./seating
 
-      - name: Copy to README
-        run: cp seating.md README.md
+      # 第五步：将 seating.md 转换为 PDF（使用 xelatex 和指定字体）
+      - name: Convert seating.md to PDF
+        run: |
+          pandoc seating.md -o seating.pdf --pdf-engine=xelatex -V mainfont="Noto Serif CJK SC"
+          cp seating.md README.md
 
-      - uses: docker://pandoc/latex:3.5
-        with:
-          entrypoint: /bin/bash
-          args: -c "apt-get update && apt-get install -y fonts-noto-cjk ttf-mscorefonts-installer && pandoc seating.md -o output.pdf --pdf-engine=xelatex"
-
+      # 第六步：提交生成的 PDF 和更新的 README.md（如果有改动）
       - name: Commit and push changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add README.md output.pdf
+          git add seating.pdf README.md
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "Auto-update README.md and output.pdf"
+            git commit -m "Auto-generate PDF from seating.md"
             git push
           fi

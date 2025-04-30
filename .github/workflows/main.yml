@@ -33,6 +33,7 @@ jobs:
             --standalone
             --output=output.pdf
             seating.md
+            --pdf-engine=xelatex
 
       - name: Commit and push changes
         run: |

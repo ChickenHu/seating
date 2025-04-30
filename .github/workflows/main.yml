@@ -28,11 +28,12 @@ jobs:
       - name: Copy to README
         run: cp seating.md README.md
 
-      - name: Convert Markdown to HTML (GitHub style)
-        run: grip seating.md --export out.html
-
-      - name: Convert HTML to PDF
-        run: wkhtmltopdf out.html output.pdf
+      - uses: docker://pandoc/core:3.5
+        with:
+          args: >-  # allows you to break string into multiple lines
+            --standalone
+            --output=output.pdf
+            seating.md
 
       - name: Commit and push changes
         run: |

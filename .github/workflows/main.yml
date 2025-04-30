@@ -1,0 +1,14 @@
+name: Generate
+on:
+  schedule:
+    - cron: "0 7 * * *"
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+    - run: cd ${{ github.workspace }}
+    - run: g++ seating.cpp -o seating.out
+    - run: ./seating.out
+    

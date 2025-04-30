@@ -1,9 +1,9 @@
-name: Generate PDF with Typst
+name: Auto Generate PDF from Markdown
 
 on:
   push:
   schedule:
-    - cron: '0 0 * * *'  # 每天 UTC 0点 = 北京时间 8点
+    - cron: '0 0 * * *'  # 北京时间早上8点
 
 jobs:
   build:
@@ -13,36 +13,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install g++
-        run: sudo apt-get update && sudo apt-get install -y g++
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++ wkhtmltopdf
+          pip install grip
 
       - name: Compile generate.cpp
         run: g++ seating.cpp -o seating
 
-      - name: Run program to generate out.md
+      - name: Run generate and save output
         run: ./seating
 
-      - name: Setup Typst CLI
-        uses: typst-community/setup-typst@v3
+      - name: Copy to README
+        run: cp seating.md README.md
 
-      - name: Convert Markdown to Typst format
+      - name: Convert Markdown to HTML (GitHub style)
+        run: grip seating.md --export out.html
+
+      - name: Convert HTML to PDF
+        run: wkhtmltopdf out.html output.pdf
+
+      - name: Commit and push changes
         run: |
-          echo '#import "typst:preview" #show: document' > out.typ
-          echo '' >> out.typ
-          cat seating.md >> out.typ
-
-      - name: Generate PDF with Typst
-        run: typst compile out.typ output.pdf
-
-      - name: Commit README and PDF
-        run: |
-          cp seating.md README.md
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add README.md output.pdf
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "Auto-update README and PDF via Typst"
+            git commit -m "Auto-update README.md and output.pdf"
             git push
           fi

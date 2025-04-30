@@ -18,10 +18,10 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y g++
 
       - name: Compile generate.cpp
-        run: g++ generate.cpp -o generate
+        run: g++ seating.cpp -o seating
 
       - name: Run the program
-        run: ./generate
+        run: ./seating
 
       - name: Replace README.md with out.md
         run: cp out.md README.md

@@ -30,7 +30,7 @@ jobs:
         run: npm install -g md-to-pdf
 
       - name: Convert Markdown to PDF
-        run: md-to-pdf out.md
+        run: md-to-pdf README.md
 
       - name: Commit and push changes
         run: |

@@ -16,8 +16,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y g++ wkhtmltopdf
-          pip install grip
+          sudo apt-get install -y g++
 
       - name: Compile generate.cpp
         run: g++ seating.cpp -o seating
@@ -28,7 +27,7 @@ jobs:
       - name: Copy to README
         run: cp seating.md README.md
 
-      - uses: docker://pandoc/core:3.5
+      - uses: docker://pandoc/latex:3.5
         with:
           args: >-  # allows you to break string into multiple lines
             --standalone

@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y g++ texlive-xetex texlive-fonts-recommended texlive-fonts-extra fonts-noto-cjk ttf-mscorefonts-installer pandoc
+          sudo apt-get install -y g++
 
       # 第三步：编译 seating.cpp
       - name: Compile seating.cpp
@@ -26,20 +26,16 @@ jobs:
 
       # 第四步：运行编译后的文件并生成 seating.md
       - name: Run seating and generate seating.md
-        run: ./seating
-
-      # 第五步：将 seating.md 转换为 PDF（使用 xelatex 和指定字体）
-      - name: Convert seating.md to PDF
         run: |
-          pandoc seating.md -o seating.pdf --pdf-engine=xelatex -V mainfont="Noto Serif CJK SC"
+          ./seating
           cp seating.md README.md
 
-      # 第六步：提交生成的 PDF 和更新的 README.md（如果有改动）
+      # 第五步：提交生成的 PDF 和更新的 README.md（如果有改动）
       - name: Commit and push changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add seating.pdf README.md
+          git add README.md
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else

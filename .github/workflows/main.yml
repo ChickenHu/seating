@@ -24,7 +24,7 @@ jobs:
         run: ./seating
 
       - name: Replace README.md with out.md
-        run: cp out.md README.md
+        run: cp seating.md README.md
 
       - name: Commit and push changes
         run: |

@@ -1,14 +1,39 @@
-name: Generate
+name: Update README
+
 on:
+  push:
   schedule:
-    - cron: "0 7 * * *"
+    # 每天北京时间早上8点 = UTC 0点
+    - cron: '0 0 * * *'
+
 jobs:
-  build-and-deploy:
+  build-and-update:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@master
-    - run: cd ${{ github.workspace }}
-    - run: g++ seating.cpp -o seating.out
-    - run: ./seating.out
-    
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install g++
+        run: sudo apt-get update && sudo apt-get install -y g++
+
+      - name: Compile generate.cpp
+        run: g++ generate.cpp -o generate
+
+      - name: Run the program
+        run: ./generate
+
+      - name: Replace README.md with out.md
+        run: cp out.md README.md
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add README.md
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Auto-update README from generate.cpp output"
+            git push
+          fi

@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 mt19937 Random(time(0));
-array<string, 60> Name =
+array<string, 40> Name =
     {"何子耘",
      "胡文馨",
      "李明蔚",
@@ -30,8 +30,6 @@ array<string, 60> Name =
      "邵琳轩",
      "艾子瑜",
      "程子颜",
-     "艾子瑜",
-     "程子颜",
      "丁一朗",
      "何乙峰",
      "李郑夫",
@@ -48,6 +46,12 @@ int main()
 {
     ofstream out("seating.md");
     shuffle(Name.begin(), Name.end(), Random);
+    array<string, 30> Seat;
+    for (int i = 0; i < 20; i++)
+    {
+        Seat[i] = Name[i];
+    }
+    shuffle(Seat.begin(), Seat.end(), Random);
     out << "## 1104\n";
     out << "|     |     |     |     |     |\n";
     out << "| --- | --- | --- | --- | --- |\n";
@@ -55,11 +59,17 @@ int main()
     {
         for (int j = 0; j < 5; j++)
         {
-            out << "| " + Name[i * 5 + j] << " ";
+            out << "| " + Seat[i * 5 + j] << " ";
         }
         out << "|\n";
     }
     out << "\n";
+    fill(Seat.begin(), Seat.end(), "");
+    for (int i = 0; i < 20; i++)
+    {
+        Seat[i] = Name[i + 20];
+    }
+    shuffle(Seat.begin(), Seat.end(), Random);
     out << "## 1105\n";
     out << "|     |     |     |     |     |\n";
     out << "| --- | --- | --- | --- | --- |\n";
@@ -67,7 +77,7 @@ int main()
     {
         for (int j = 0; j < 5; j++)
         {
-            out << "| " + Name[i * 5 + j + 30] << " ";
+            out << "| " + Seat[i * 5 + j] << " ";
         }
         out << "|\n";
     }
